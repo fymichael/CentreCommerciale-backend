@@ -18,8 +18,19 @@ mongoose.connect(process.env.MONGO_URI)
     process.exit(1);
   });
 
+// Enregistrement GLOBAL des modèles
+require('./models/Shop');
+require('./models/Category');
+require('./models/Product');
+require('./models/User');
+require('./models/Invoice');
+require('./models/Payment');
+require('./models/PaymentType');
+require('./models/Storage');
+require('./models/SubscriptionShop');
+
 // Routes
-app.use('/products', require('./routes/productRoutes'));
+app.use('/products', require('./routes/product.routes'));
 
 app.listen(PORT, () =>
   console.log(`🚀 Serveur démarré sur le port ${PORT}`)

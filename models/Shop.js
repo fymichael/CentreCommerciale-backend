@@ -5,7 +5,7 @@ const ShopSchema = new mongoose.Schema({
   description: String,
   price_in_month: Number,
 
-  state: { type: Number, default: true }
+  state: { type: Number }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Shop', ShopSchema);

@@ -12,7 +12,7 @@ const ProductSchema = new mongoose.Schema({
   category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
 
   image: String,
-  state: { type: Number, default: true }
+  state: { type: Number }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', ProductSchema);
