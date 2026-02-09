@@ -31,6 +31,7 @@ require('./models/SubscriptionShop');
 
 // Routes
 app.use('/products', require('./routes/product.routes'));
+app.use('/categorys', require('./routes/category.routes'));
 
 app.listen(PORT, () =>
   console.log(`🚀 Serveur démarré sur le port ${PORT}`)
