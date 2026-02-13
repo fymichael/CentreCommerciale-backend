@@ -30,6 +30,7 @@ require('./models/Storage');
 require('./models/SubscriptionShop');
 
 // Routes
+app.use('/uploads', express.static('uploads'));
 app.use('/products', require('./routes/product.routes'));
 app.use('/categorys', require('./routes/category.routes'));
 
