@@ -33,6 +33,7 @@ require('./models/SubscriptionShop');
 app.use('/uploads', express.static('uploads'));
 app.use('/products', require('./routes/product.routes'));
 app.use('/categorys', require('./routes/category.routes'));
+app.use('/shops', require('./routes/shop.routes'));
 
 app.listen(PORT, () =>
   console.log(`🚀 Serveur démarré sur le port ${PORT}`)
