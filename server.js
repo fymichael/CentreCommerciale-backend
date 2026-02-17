@@ -34,6 +34,11 @@ app.use('/uploads', express.static('uploads'));
 app.use('/products', require('./routes/product.routes'));
 app.use('/categorys', require('./routes/category.routes'));
 app.use('/shops', require('./routes/shop.routes'));
+app.use('/invoices', require('./routes/invoice.routes'));
+app.use('/payment-types', require('./routes/paymentType.routes'));
+app.use('/payments', require('./routes/payment.routes'));
+app.use('/roles', require('./routes/role.routes'));
+app.use('/users', require('./routes/user.routes'));
 
 app.listen(PORT, () =>
   console.log(`🚀 Serveur démarré sur le port ${PORT}`)

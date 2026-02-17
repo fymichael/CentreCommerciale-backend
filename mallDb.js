@@ -4,6 +4,11 @@ use mallDb;
 db.createCollection("shops");
 db.createCollection("categories");
 db.createCollection("products");
+db.createCollection("roles");
+db.createCollection("users");
+db.createCollection("paymentType");
+db.createCollection("payment");
+db.createCollection("invoice");
 
 // Insertion des données de test
 db.shops.insertMany([
@@ -14,6 +19,12 @@ db.shops.insertMany([
 db.categories.insertMany([
   { name: "Electronics", description: "Produits électroniques", createdAt: new Date(), updatedAt: new Date() },
   { name: "Clothing", description: "Vêtements", createdAt: new Date(), updatedAt: new Date() }
+]);
+
+db.roles.insertMany([
+  { id: 1, name: "Admin shop", createdAt: new Date(), updatedAt: new Date() },
+  { id: 2, name: "Admin mall", createdAt: new Date(), updatedAt: new Date() },
+  { id: 3, name: "Client", createdAt: new Date(), updatedAt: new Date() }
 ]);
 
 var shopA = db.shops.findOne({ name: "Shop A" })._id;
