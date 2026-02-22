@@ -10,6 +10,32 @@ exports.createProduct = async (req, res) => {
   }
 };*/
 
+exports.getSearchingResults = async (req, res) => {
+  try {
+    const term = req.query.q;
+    
+    // Appel du service
+    const products = await productService.searchProduct(term);
+    
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Erreur recherche:', error);
+    res.status(500).json({ message: "Erreur lors de la recherche" });
+  }
+}
+
+exports.getProductByCategory = async (req, res) => {
+  try {
+    const product = await productService.findByCategory(req.params.idCategory);
+    if (!product || product.length == 0) return res.status(404).json({ message: 'Aucune Produit dans cette categories' });
+
+    console.log(product);
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 exports.createProduct = async (req, res) => {
   try {
     const {
