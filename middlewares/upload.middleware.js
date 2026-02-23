@@ -11,6 +11,7 @@ if (!process.env.VERCEL) {
     }
 }
 
+
 // 2. On configure le stockage intelligemment
 const storage = process.env.VERCEL 
     ? multer.memoryStorage() // Sur Vercel, on garde le fichier en RAM temporairement
