@@ -10,6 +10,21 @@ exports.createProduct = async (req, res) => {
   }
 };*/
 
+exports.getFilterResults = async (req, res) => {
+  try {
+    const { minPrice, maxPrice } = req.query;
+
+    // Appel du service
+    const products = await productService.filterProducts(minPrice, maxPrice);
+    
+    console.log(products);
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Erreur filtre:', error);
+    res.status(500).json({ message: "Erreur lors du filtrage" });
+  }
+}
+
 exports.getSearchingResults = async (req, res) => {
   try {
     const term = req.query.q;
