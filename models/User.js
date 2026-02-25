@@ -6,12 +6,12 @@ const UserSchema = new mongoose.Schema({
   last_name: String,
   birthday: Date,
 
-  username: { type: String, unique: true },
+  email: { type: String, unique: true },
   password: String,
 
   contact: String,
   address: String,
-  phone_number: String,
+  cin: String,
 
   state: { type: Boolean, default: true }
 }, { timestamps: true });

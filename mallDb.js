@@ -109,3 +109,29 @@ db.products.insertMany([
 
 ]);
 
+var clientRules = db.roles.findOne({ name: "Client" })._id;
+
+db.users.insertMany([
+  {
+    role_id: clientRules,
+    first_name: "Rakoto",
+    last_name: "Bema",
+    birthday: new Date("1999-12-12"),
+    email: "Rakoto.Bema@gmail.com",
+    password: "User2026",
+    contact: "034 56 987 00",
+    address: "LOT ITE 001 Ivandry",
+    cin: "113 489 389 383"
+  },
+  {
+    role_id: clientRules,
+    first_name: "Ravao",
+    last_name: "Solo",
+    birthday: new Date("1998-10-19"),
+    email: "Ravao.Solo@gmail.com",
+    password: "User2026",
+    contact: "033 23 937 34",
+    address: "LOT ITH 019 Ivato",
+    cin: "101 003 023 033"
+  }
+]);
