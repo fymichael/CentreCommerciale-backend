@@ -3,6 +3,7 @@ const router = express.Router();
 const controller = require('../controllers/product.controller');
 const upload = require('../middlewares/upload.middleware');
 
+router.get('/search', controller.filterProducts);
 router.get('/', controller.getProducts);
 router.get('/search', controller.getSearchingResults)
 router.get('/filter', controller.getFilterResults)

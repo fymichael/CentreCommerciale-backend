@@ -2,7 +2,7 @@ const roleService = require('../services/role.service');
 
 exports.createRole = async (req, res) => {
   try {
-    const role = await roleRole.create(req.body);
+    const role = await roleService.create(req.body);
     res.status(201).json(role);
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -6,14 +6,16 @@ const UserSchema = new mongoose.Schema({
   last_name: String,
   birthday: Date,
 
-  email: { type: String, unique: true },
+    
+  email: String,
+  username: { type: String, unique: true },
   password: String,
 
   contact: String,
   address: String,
   cin: String,
 
-  state: { type: Boolean, default: true }
+  state: Number
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);
