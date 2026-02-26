@@ -12,8 +12,36 @@ db.createCollection("invoice");
 
 // Insertion des données de test
 db.shops.insertMany([
-  { name: "Shop A", description: "Boutique A", price_in_month: 100.0, state: 1, createdAt: new Date(), updatedAt: new Date() },
-  { name: "Shop B", description: "Boutique B", price_in_month: 150.0, state: 1, createdAt: new Date(), updatedAt: new Date() }
+  { 
+    proprioName: "Jean Dupont",
+    name: "Shop A", 
+    description: "Boutique spécialisée en électronique", 
+    fiscal_number: "STAT-123-456-789",
+    logo: "logos/shop-a.png",
+    email: "contact@shopa.mg",
+    password: "Shop2026",
+    contact: "034 00 123 45",
+    address: "Ankorondrano, Antananarivo",
+    price_in_month: 100.0, 
+    state: 1, 
+    createdAt: new Date(), 
+    updatedAt: new Date() 
+  },
+  { 
+    proprioName: "Marie Rakoto",
+    name: "Shop B", 
+    description: "Boutique de mode et prêt-à-porter", 
+    fiscal_number: "STAT-987-654-321",
+    logo: "logos/shop-b.png",
+    email: "sales@shopb.mg",
+    password: "Shop2026",
+    contact: "032 11 987 65",
+    address: "Analakely, Antananarivo",
+    price_in_month: 150.0, 
+    state: 1, 
+    createdAt: new Date(), 
+    updatedAt: new Date() 
+  }
 ]);
 
 db.categories.insertMany([
