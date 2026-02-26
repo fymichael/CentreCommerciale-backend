@@ -6,6 +6,8 @@ const UserSchema = new mongoose.Schema({
   last_name: String,
   birthday: Date,
 
+    
+  email: String,
   username: { type: String, unique: true },
   password: String,
 
@@ -13,7 +15,7 @@ const UserSchema = new mongoose.Schema({
   address: String,
   phone_number: String,
 
-  state: { type: Boolean, default: true }
+  state: Number
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);
