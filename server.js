@@ -18,7 +18,12 @@ if (!process.env.VERCEL) {
 }
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://ton-site-prod.com', 'http://localhost:4200'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Important pour Safari si tu utilises des sessions/cookies
+}));
 app.use(express.json());
 
 // 2. CONNEXION MONGODB (Optimisée pour Serverless)
