@@ -39,6 +39,18 @@ exports.getSearchingResults = async (req, res) => {
   }
 }
 
+exports.getProductByShop = async (req, res) => {
+  try {
+    const product = await productService.findByShop(req.params.idShop);
+    if (!product || product.length == 0) return res.status(404).json({ message: 'Aucun Produit relier a ce shop' });
+
+    console.log(product);
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 exports.getProductByCategory = async (req, res) => {
   try {
     const product = await productService.findByCategory(req.params.idCategory);
@@ -56,31 +68,46 @@ exports.createProduct = async (req, res) => {
     const {
       code,
       name,
+      description,
       unit_price,
       discount_rate,
+      shop_id,
       category_id,
-      state
+      variant,         
+      build_material,  
+      quality,
+      state,
+      color          
     } = req.body;
 
     const image = req.file
       ? `/uploads/products/${req.file.filename}`
       : null;
 
-    const product = new Product({
+    const productData = {
       code,
       name,
+      description,
       unit_price,
       discount_rate,
       category_id,
-      state,
-      image
-    });
+      shop_id,
+      variant,
+      build_material,
+      quality,
+      state: state || 1,
+      image,
+      color
+    };
+
+    const product = new Product(productData);
 
     await product.save();
 
     res.status(201).json(product);
 
   } catch (error) {
+    console.error("Erreur Backend:", error);
     res.status(500).json({ message: error.message });
   }
 };

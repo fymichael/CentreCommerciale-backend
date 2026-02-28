@@ -8,7 +8,7 @@ db.createCollection("roles");
 db.createCollection("users");
 db.createCollection("paymentType");
 db.createCollection("payment");
-db.createCollection("invoice");
+db.createCollection("invoices");
 
 // Insertion des données de test
 db.shops.insertMany([

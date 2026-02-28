@@ -33,6 +33,12 @@ class ProductService {
       .populate('category_id');
   }
 
+  async findByShop(idShop) {
+    return await Product.find({ "shop_id": idShop })
+      .populate('shop_id')
+      .populate('category_id');
+  }
+
     async filterProducts(minPrice, maxPrice) {
       try {
 

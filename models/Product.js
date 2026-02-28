@@ -14,7 +14,7 @@ const ProductSchema = new mongoose.Schema({
   image: String,
   color: String,
   build_material: String,
-  Quality: String,
+  quality: String,
   variant: String,
   state: { type: Number }
 }, { timestamps: true });
