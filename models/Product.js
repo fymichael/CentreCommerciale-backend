@@ -12,6 +12,10 @@ const ProductSchema = new mongoose.Schema({
   category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
 
   image: String,
+  color: String,
+  build_material: String,
+  quality: String,
+  variant: String,
   state: { type: Number }
 }, { timestamps: true });
 

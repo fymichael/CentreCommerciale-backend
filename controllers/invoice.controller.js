@@ -18,6 +18,17 @@ exports.getInvoices = async (req, res) => {
   }
 };
 
+exports.getLatestInvoice = async (req, res) => {
+  try {
+    const invoice = await invoiceService.getNextReference();
+    if (!invoice)      return res.status(404).json({ message: 'Aucune facture trouvée' });
+
+    res.json(invoice);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 exports.getInvoiceById = async (req, res) => {
   try {
     const invoice = await invoiceService.findById(req.params.id);
@@ -25,6 +36,30 @@ exports.getInvoiceById = async (req, res) => {
       return res.status(404).json({ message: 'Facture introuvable' });
 
     res.json(invoice);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getInvoiceByUserId = async (req, res) => {
+  try {
+    const invoices = await invoiceService.findByIdUser(req.params.idUser);
+    if (!invoices || invoices.length === 0)
+      return res.status(404).json({ message: 'Commandes introuvables pour cet utilisateur' });
+
+    res.json(invoices);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getInvoiceByShopId = async (req, res) => {
+  try {
+    const invoices = await invoiceService.findByIdShop(req.params.idShop);
+    if (!invoices || invoices.length === 0)
+      return res.status(404).json({ message: 'Commandes introuvables pour cette boutique' });
+
+    res.json(invoices);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
