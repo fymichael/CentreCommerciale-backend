@@ -39,36 +39,37 @@ class ProductService {
       .populate('category_id');
   }
 
-    async filterProducts(minPrice, maxPrice) {
-      try {
+  async filterProductsByPrice(minPrice, maxPrice) {
+    try {
 
-        let mongoQuery = {};
+      let mongoQuery = {};
 
-        if (minPrice || maxPrice) {
-          mongoQuery.unit_price = {};
-          if (minPrice) {
-            mongoQuery.unit_price.$gte = Number(minPrice);
-          }
-          if (maxPrice) {
-            mongoQuery.unit_price.$lte = Number(maxPrice);
-          }
+      if (minPrice || maxPrice) {
+        mongoQuery.unit_price = {};
+        if (minPrice) {
+          mongoQuery.unit_price.$gte = Number(minPrice);
         }
-
-        // 5. Exécution de la requête sur MongoDB
-        console.log("Recherche MongoDB avec :", mongoQuery);
-        const filteredProducts = await Product.find(mongoQuery)
-          .populate('shop_id')
-          .populate('category_id');
-
-        return filteredProducts;
-
-      } catch (error) {
-        console.error("Erreur lors du filtrage :", error);
+        if (maxPrice) {
+          mongoQuery.unit_price.$lte = Number(maxPrice);
+        }
       }
-    };
+
+      // 5. Exécution de la requête sur MongoDB
+      console.log("Recherche MongoDB avec :", mongoQuery);
+      const filteredProducts = await Product.find(mongoQuery)
+        .populate('shop_id')
+        .populate('category_id');
+
+      return filteredProducts;
+
+    } catch (error) {
+      console.error("Erreur lors du filtrage :", error);
+    }
+  };
 
   async searchProduct(queryText) {
     if (!queryText) return [];
+    console.log("Recherche MongoDB avec :", queryText);
 
     // limitation a 3 mots pour la recherche
     const words = queryText

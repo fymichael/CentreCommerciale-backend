@@ -3,7 +3,7 @@ const router = express.Router();
 const controller = require('../controllers/product.controller');
 const uploadCloud = require('../cloudinary');
 
-router.get('/search', controller.filterProducts);
+router.get('/search', controller.getSearchingResults);
 router.get('/filter', controller.getFilterResults);
 
 router.get('/shop/:idShop', controller.getProductByShop);
