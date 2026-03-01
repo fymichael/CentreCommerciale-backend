@@ -34,9 +34,11 @@ const connectDB = async () => {
     if (mongoose.connection.readyState >= 1) return;
     
     return mongoose.connect(process.env.MONGO_URI, {
-        serverSelectionTimeoutMS: 5000, // On n'attend pas plus de 5s
-        family: 4,                    // FORCE l'IPv4 (Indispensable pour Atlas/Vercel)
-        maxPoolSize: 10               // Évite de saturer ton cluster gratuit
+        serverSelectionTimeoutMS: 5000, 
+        socketTimeoutMS: 45000,        // Augmente le temps de réponse
+        family: 4,                    
+        heartbeatFrequencyMS: 1000,    // Garde la connexion "vivante" toutes les secondes
+        maxPoolSize: 1                 // TRÈS IMPORTANT : Sur Vercel Free, ne garde qu'une connexion
     });
 };
 

@@ -15,7 +15,7 @@ exports.getFilterResults = async (req, res) => {
     const { minPrice, maxPrice } = req.query;
 
     // Appel du service
-    const products = await productService.filterProducts(minPrice, maxPrice);
+    const products = await productService.filterProductsByPrice(minPrice, maxPrice);
     
     console.log(products);
     res.status(200).json(products);
