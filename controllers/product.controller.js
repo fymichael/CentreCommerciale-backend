@@ -80,9 +80,7 @@ exports.createProduct = async (req, res) => {
       color          
     } = req.body;
 
-    const image = req.file
-      ? `/uploads/products/${req.file.filename}`
-      : null;
+    const image = req.file ? req.file.path : null;
 
     const productData = {
       code,
@@ -101,13 +99,12 @@ exports.createProduct = async (req, res) => {
     };
 
     const product = new Product(productData);
-
     await product.save();
 
     res.status(201).json(product);
 
   } catch (error) {
-    console.error("Erreur Backend:", error);
+    console.error("Erreur Backend Cloudinary:", error);
     res.status(500).json({ message: error.message });
   }
 };

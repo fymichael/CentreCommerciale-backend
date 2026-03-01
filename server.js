@@ -19,10 +19,10 @@ if (!process.env.VERCEL) {
 
 // Middleware
 app.use(cors({
-  origin: ['https://centre-commerciale-frontend.vercel.app', 'http://localhost:4200'],
+  origin: ['https://centre-commerciale-frontend.vercel.app', 'http://localhost:4200', 'http://localhost:1234'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true // Important pour Safari si tu utilises des sessions/cookies
+  credentials: true
 }));
 app.use(express.json());
 
