@@ -4,17 +4,17 @@ const multer = require('multer');
 
 // Configuration avec tes variables d'environnement
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_KEY,
-  api_secret: process.env.CLOUDINARY_SECRET
+  cloud_name: 'duh7bnqhv',
+  api_key: '419569562119462',
+  api_secret: 'loxU2utxTJW6KDSOWiXeH8rq4dg'
 });
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'products', // Le nom du dossier dans Cloudinary
+    folder: 'products',
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-    transformation: [{ width: 500, height: 500, crop: 'limit' }] // Optionnel: redimensionne auto
+    transformation: [{ width: 500, height: 500, crop: 'limit' }] 
   },
 });
 

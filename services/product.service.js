@@ -54,12 +54,6 @@ class ProductService {
           }
         }
 
-        // 4. Logique pour la condition (Type de boutique)
-        // if (condition && condition !== 'all') {
-        //   // Si tu stockes 'new' ou 'used' dans ton modèle Product
-        //   mongoQuery.condition = condition; 
-        // }
-
         // 5. Exécution de la requête sur MongoDB
         console.log("Recherche MongoDB avec :", mongoQuery);
         const filteredProducts = await Product.find(mongoQuery)
