@@ -32,7 +32,12 @@ mongoose.set('debug', true);
 // Sur Vercel, on évite de se reconnecter à chaque appel si déjà connecté
 const connectDB = async () => {
     if (mongoose.connection.readyState >= 1) return;
-    return mongoose.connect(process.env.MONGO_URI);
+    
+    return mongoose.connect(process.env.MONGO_URI, {
+        serverSelectionTimeoutMS: 5000, // On n'attend pas plus de 5s
+        family: 4,                    // FORCE l'IPv4 (Indispensable pour Atlas/Vercel)
+        maxPoolSize: 10               // Évite de saturer ton cluster gratuit
+    });
 };
 
 // Appel initial pour le local, pour Vercel chaque route devrait idéalement appeler connectDB
