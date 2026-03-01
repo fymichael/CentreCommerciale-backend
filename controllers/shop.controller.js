@@ -30,7 +30,7 @@ exports.getShops = async (req, res) => {
     if (state) {
       shops = await shopService.findByState(Number(state));
     } else {
-      shops = await shopService.findAll();
+      shops = await shopService.findAll(req.user);
     }
 
     res.json(shops);

@@ -19,3 +19,12 @@ exports.addExit = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+exports.getStockState = async (req, res) => {
+  try {
+    const data = await storageService.getStockState();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
