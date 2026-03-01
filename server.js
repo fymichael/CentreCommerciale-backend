@@ -19,26 +19,10 @@ if (!process.env.VERCEL) {
 
 // Middleware
 app.use(cors({
-  origin: function (origin, callback) {
-    // Liste des domaines autorisés
-    const allowedOrigins = [
-      'https://centre-commerciale-frontend.vercel.app',
-      'http://localhost:4200',
-      'http://localhost:1234'
-    ];
-
-    // Si l'origine est dans la liste ou si elle est indéfinie (cas de Postman/Mobile)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      // Optionnel : tu peux aussi mettre callback(null, true) ici pour TOUT accepter
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  credentials: true,
-  optionsSuccessStatus: 200
+  origin: '*', 
+  methods: '*',
+  allowedHeaders: '*',
+  credentials: false
 }));
 app.use(express.json());
 
