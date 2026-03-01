@@ -21,6 +21,10 @@ class ShopService {
   async delete(id) {
     return await Shop.findByIdAndDelete(id);
   }
+
+  async findByState(state) {
+    return await Shop.find({ state });
+  }
 }
 
 module.exports = new ShopService();

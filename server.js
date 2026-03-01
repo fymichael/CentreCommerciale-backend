@@ -40,6 +40,7 @@ app.use('/payments', require('./routes/payment.routes'));
 app.use('/roles', require('./routes/role.routes'));
 app.use('/users', require('./routes/user.routes'));
 app.use('/auth', require('./routes/auth.routes'));
+app.use('/subscriptions', require('./routes/subscriptionShop.routes'));
 
 app.listen(PORT, () =>
   console.log(`🚀 Serveur démarré sur le port ${PORT}`)

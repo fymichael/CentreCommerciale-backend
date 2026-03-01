@@ -9,6 +9,15 @@ exports.createUser = async (req, res) => {
   }
 };
 
+exports.getAllWithoutFilter = async (req, res) => {
+  try {
+    const users = await userService.findAll();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.getUsers = async (req, res) => {
   try {
     const users = await userService.findAllWithFilters(req.query);
