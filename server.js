@@ -2,23 +2,49 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+
+// 1. GESTION DU DOSSIER UPLOADS (Uniquement hors Vercel)
+// Vercel est en lecture seule, mkdir ferait crash l'app
+if (!process.env.VERCEL) {
+    const dir = './uploads/products';
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+        console.log("📁 Dossier local uploads/products vérifié/créé");
+    }
+}
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://centre-commerciale-frontend.vercel.app', 'http://localhost:4200'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Important pour Safari si tu utilises des sessions/cookies
+}));
 app.use(express.json());
 
-// Connexion à MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connecté'))
-  .catch(err => {
-    console.error('❌ Erreur MongoDB :', err.message);
-    process.exit(1);
-  });
+// 2. CONNEXION MONGODB (Optimisée pour Serverless)
+mongoose.set('debug', true);
 
-// Enregistrement GLOBAL des modèles
+// Sur Vercel, on évite de se reconnecter à chaque appel si déjà connecté
+const connectDB = async () => {
+    if (mongoose.connection.readyState >= 1) return;
+    return mongoose.connect(process.env.MONGO_URI);
+};
+
+// Appel initial pour le local, pour Vercel chaque route devrait idéalement appeler connectDB
+connectDB()
+    .then(() => console.log('✅ MongoDB connecté'))
+    .catch(err => {
+        console.error('❌ Erreur MongoDB :', err.message);
+        // On ne fait pas process.exit(1) sur Vercel sinon la fonction ne redémarrera pas
+        if (!process.env.VERCEL) process.exit(1);
+    });
+
+// Enregistrement des modèles
 require('./models/Shop');
 require('./models/Category');
 require('./models/Product');
@@ -42,6 +68,13 @@ app.use('/users', require('./routes/user.routes'));
 app.use('/auth', require('./routes/auth.routes'));
 app.use('/subscriptions', require('./routes/subscriptionShop.routes'));
 
-app.listen(PORT, () =>
-  console.log(`🚀 Serveur démarré sur le port ${PORT}`)
-);
+// 3. ADAPTATION POUR VERCEL
+if (!process.env.VERCEL) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () =>
+        console.log(`🚀 Serveur démarré en local sur : http://localhost:${PORT}`)
+    );
+}
+
+// 4. EXPORT POUR VERCEL (Indispensable)
+module.exports = app;

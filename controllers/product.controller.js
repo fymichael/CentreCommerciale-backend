@@ -10,36 +10,104 @@ exports.createProduct = async (req, res) => {
   }
 };*/
 
+exports.getFilterResults = async (req, res) => {
+  try {
+    const { minPrice, maxPrice } = req.query;
+
+    // Appel du service
+    const products = await productService.filterProducts(minPrice, maxPrice);
+    
+    console.log(products);
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Erreur filtre:', error);
+    res.status(500).json({ message: "Erreur lors du filtrage" });
+  }
+}
+
+exports.getSearchingResults = async (req, res) => {
+  try {
+    const term = req.query.q;
+    
+    // Appel du service
+    const products = await productService.searchProduct(term);
+    
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Erreur recherche:', error);
+    res.status(500).json({ message: "Erreur lors de la recherche" });
+  }
+}
+
+exports.getProductByShop = async (req, res) => {
+  try {
+    const product = await productService.findByShop(req.params.idShop);
+    if (!product || product.length == 0) return res.status(404).json({ message: 'Aucun Produit relier a ce shop' });
+
+    console.log(product);
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+exports.getProductByCategory = async (req, res) => {
+  try {
+    const product = await productService.findByCategory(req.params.idCategory);
+    if (!product || product.length == 0) return res.status(404).json({ message: 'Aucune Produit dans cette categories' });
+
+    console.log(product);
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 exports.createProduct = async (req, res) => {
   try {
     const {
       code,
       name,
+      description,
       unit_price,
       discount_rate,
+      shop_id,
       category_id,
-      state
+      variant,         
+      build_material,  
+      quality,
+      state,
+      color          
     } = req.body;
 
     const image = req.file
       ? `/uploads/products/${req.file.filename}`
       : null;
 
-    const product = new Product({
+    const productData = {
       code,
       name,
+      description,
       unit_price,
       discount_rate,
       category_id,
-      state,
-      image
-    });
+      shop_id,
+      variant,
+      build_material,
+      quality,
+      state: state || 1,
+      image,
+      color
+    };
+
+    const product = new Product(productData);
 
     await product.save();
 
     res.status(201).json(product);
 
   } catch (error) {
+    console.error("Erreur Backend:", error);
     res.status(500).json({ message: error.message });
   }
 };

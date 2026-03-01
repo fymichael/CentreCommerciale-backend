@@ -8,8 +8,9 @@ const InvoiceSchema = new mongoose.Schema({
 
   unit_price: Number,
   quantity: Number,
+  specifications: String,
 
-  state: String
+  state: Number
 }, { timestamps: true });
 
 module.exports = mongoose.model('Invoice', InvoiceSchema);
