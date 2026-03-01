@@ -54,7 +54,7 @@ exports.getProductByShop = async (req, res) => {
 exports.getProductByCategory = async (req, res) => {
   try {
     const product = await productService.findByCategory(req.params.idCategory);
-    if (!product || product.length == 0) return res.status(404).json({ message: 'Aucune Produit dans cette categories' });
+    if (!product || product.length == 0) return res.json([]);
 
     console.log(product);
     res.json(product);
