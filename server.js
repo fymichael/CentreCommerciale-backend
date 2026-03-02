@@ -24,19 +24,39 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// 3. CONNEXION MONGODB (Optimisée pour Serverless / Vercel)
+// 3. CONNEXION MONGODB - Attend que la connexion soit VRAIMENT prête
+let isConnecting = false;
+
 const connectDB = async () => {
-    if (mongoose.connection.readyState === 2) return; // 2 = connected
-    return mongoose.connect(process.env.MONGO_URI, {
-        serverSelectionTimeoutMS: 10000,
-        socketTimeoutMS: 45000,
-        family: 4,
-        heartbeatFrequencyMS: 10000,
-        maxPoolSize: 1
-    });
+    // Déjà connecté → on passe
+    if (mongoose.connection.readyState === 1) return;
+
+    // Connexion en cours → on attend qu'elle finisse au lieu de relancer
+    if (isConnecting) {
+        await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error('Connection wait timeout')), 10000);
+            mongoose.connection.once('connected', () => { clearTimeout(timeout); resolve(); });
+            mongoose.connection.once('error', (err) => { clearTimeout(timeout); reject(err); });
+        });
+        return;
+    }
+
+    isConnecting = true;
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 10000,
+            socketTimeoutMS: 45000,
+            family: 4,
+            heartbeatFrequencyMS: 10000,
+            maxPoolSize: 1
+        });
+        console.log('✅ MongoDB connecté');
+    } finally {
+        isConnecting = false;
+    }
 };
 
-// 4. MIDDLEWARE CONNEXION AVANT CHAQUE REQUÊTE (indispensable sur Vercel)
+// 4. MIDDLEWARE CONNEXION AVANT CHAQUE REQUÊTE
 app.use(async (req, res, next) => {
     try {
         await connectDB();
