@@ -9,15 +9,6 @@ exports.createShop = async (req, res) => {
   }
 };
 
-exports.getShops = async (req, res) => {
-  try {
-    const shops = await shopService.findAll();
-    res.json(shops);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 exports.getShopById = async (req, res) => {
   try {
     const shop = await shopService.findById(req.params.id);
@@ -25,6 +16,24 @@ exports.getShopById = async (req, res) => {
       return res.status(404).json({ message: 'Boutique introuvable' });
 
     res.json(shop);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getShops = async (req, res) => {
+  try {
+    const { state } = req.query;
+
+    let shops;
+
+    if (state) {
+      shops = await shopService.findByState(Number(state));
+    } else {
+      shops = await shopService.findAll(req.user);
+    }
+
+    res.json(shops);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

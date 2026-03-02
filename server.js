@@ -3,12 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const fs = require('fs');
-const path = require('path');
 
 const app = express();
 
 // 1. GESTION DU DOSSIER UPLOADS (Uniquement hors Vercel)
-// Vercel est en lecture seule, mkdir ferait crash l'app
 if (!process.env.VERCEL) {
     const dir = './uploads/products';
     if (!fs.existsSync(dir)) {
@@ -17,41 +15,59 @@ if (!process.env.VERCEL) {
     }
 }
 
-// Middleware
+// 2. MIDDLEWARES DE BASE
 app.use(cors({
-  origin: '*', 
-  methods: '*',
-  allowedHeaders: '*',
-  credentials: false
+    origin: '*',
+    methods: '*',
+    allowedHeaders: '*',
+    credentials: false
 }));
 app.use(express.json());
 
-// 2. CONNEXION MONGODB (Optimisée pour Serverless)
-mongoose.set('debug', true);
+// 3. CONNEXION MONGODB - Attend que la connexion soit VRAIMENT prête
+let isConnecting = false;
 
-// Sur Vercel, on évite de se reconnecter à chaque appel si déjà connecté
 const connectDB = async () => {
-    if (mongoose.connection.readyState >= 1) return;
-    
-    return mongoose.connect(process.env.MONGO_URI, {
-        serverSelectionTimeoutMS: 5000, 
-        socketTimeoutMS: 45000,        // Augmente le temps de réponse
-        family: 4,                    
-        heartbeatFrequencyMS: 1000,    // Garde la connexion "vivante" toutes les secondes
-        maxPoolSize: 1                 // TRÈS IMPORTANT : Sur Vercel Free, ne garde qu'une connexion
-    });
+    // Déjà connecté → on passe
+    if (mongoose.connection.readyState === 1) return;
+
+    // Connexion en cours → on attend qu'elle finisse au lieu de relancer
+    if (isConnecting) {
+        await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error('Connection wait timeout')), 10000);
+            mongoose.connection.once('connected', () => { clearTimeout(timeout); resolve(); });
+            mongoose.connection.once('error', (err) => { clearTimeout(timeout); reject(err); });
+        });
+        return;
+    }
+
+    isConnecting = true;
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 10000,
+            socketTimeoutMS: 45000,
+            family: 4,
+            heartbeatFrequencyMS: 10000,
+            maxPoolSize: 1
+        });
+        console.log('✅ MongoDB connecté');
+    } finally {
+        isConnecting = false;
+    }
 };
 
-// Appel initial pour le local, pour Vercel chaque route devrait idéalement appeler connectDB
-connectDB()
-    .then(() => console.log('✅ MongoDB connecté'))
-    .catch(err => {
-        console.error('❌ Erreur MongoDB :', err.message);
-        // On ne fait pas process.exit(1) sur Vercel sinon la fonction ne redémarrera pas
-        if (!process.env.VERCEL) process.exit(1);
-    });
+// 4. MIDDLEWARE CONNEXION AVANT CHAQUE REQUÊTE
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error('❌ Connexion MongoDB échouée:', err.message);
+        res.status(500).json({ error: 'Database connection failed' });
+    }
+});
 
-// Enregistrement des modèles
+// 5. ENREGISTREMENT DES MODÈLES
 require('./models/Shop');
 require('./models/Category');
 require('./models/Product');
@@ -62,7 +78,7 @@ require('./models/PaymentType');
 require('./models/Storage');
 require('./models/SubscriptionShop');
 
-// Routes
+// 6. ROUTES
 app.use('/uploads', express.static('uploads'));
 app.use('/products', require('./routes/product.routes'));
 app.use('/categorys', require('./routes/category.routes'));
@@ -73,8 +89,10 @@ app.use('/payments', require('./routes/payment.routes'));
 app.use('/roles', require('./routes/role.routes'));
 app.use('/users', require('./routes/user.routes'));
 app.use('/auth', require('./routes/auth.routes'));
+app.use('/subscriptions', require('./routes/subscriptionShop.routes'));
+app.use('/storages', require('./routes/storage.routes'));
 
-// 3. ADAPTATION POUR VERCEL
+// 7. DÉMARRAGE LOCAL (ignoré sur Vercel)
 if (!process.env.VERCEL) {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () =>
@@ -82,5 +100,5 @@ if (!process.env.VERCEL) {
     );
 }
 
-// 4. EXPORT POUR VERCEL (Indispensable)
+// 8. EXPORT POUR VERCEL (indispensable)
 module.exports = app;

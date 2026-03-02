@@ -82,6 +82,10 @@ class UserService {
     };
   }
 
+  async findAll() {
+    return await User.find();
+  }
+
   async findById(id) {
     return await User.findById(id).populate('role_id');
   }

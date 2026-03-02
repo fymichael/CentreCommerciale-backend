@@ -19,6 +19,7 @@ class AuthService {
         if(user.state !== 5) throw new Error("Compte en attente de validation");
         
         const isMatch = await bcrypt.compare(password, user.password);
+        //const isMatch = password === user.password; // A supprimer apres le hashage des mots de passe
         if (!isMatch) throw new Error("Identifiants invalides");
 
         const generateTokens = async (user) => {
