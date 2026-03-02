@@ -28,3 +28,13 @@ exports.getStockState = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getStockStateByProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const data = await storageService.getStockByIdProduct(productId);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
