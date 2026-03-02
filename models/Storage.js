@@ -3,11 +3,20 @@ const mongoose = require('mongoose');
 const StorageSchema = new mongoose.Schema({
   product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
 
-  quantity_in: Number,
-  quantity_out: Number,
+  type: { 
+    type: String, 
+    enum: ['IN', 'OUT'], 
+    required: true 
+  },
 
-  date_in: Date,
-  date_out: Date
+  quantity: { type: Number, required: true },
+
+  unit_cost: Number,
+
+  total_cost: Number,
+
+  date: { type: Date, default: Date.now }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Storage', StorageSchema);
