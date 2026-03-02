@@ -6,4 +6,6 @@ router.post('/entry', controller.addEntry);
 router.post('/exit', controller.addExit);
 router.get('/state', controller.getStockState);
 
+router.get('/state/:productId', controller.getStockStateByProduct);
+
 module.exports = router;

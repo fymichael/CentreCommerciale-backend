@@ -3,6 +3,20 @@ const Product = require('../models/Product');
 
 class StorageService {
 
+async getStockByIdProduct(productId) {
+    const product = await Product.findById(productId);
+    
+    if (!product) {
+        throw new Error('Produit introuvable');
+    }
+
+    const storageData = await Storage.find({ product_id: productId })
+        .populate('product_id')
+        .lean(); 
+
+    return storageData;        
+}
+
     async addEntry(productId, quantity, unitCost) {
 
         const product = await Product.findById(productId);
