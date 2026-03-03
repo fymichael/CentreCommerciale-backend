@@ -1,5 +1,4 @@
 const Shop = require('../models/Shop');
-const SubscriptionShop = require('../models/SubscriptionShop');
 
 class ShopService {
 
@@ -7,15 +6,8 @@ class ShopService {
     return await Shop.create(data);
   }
 
-  async findAll(user) {
-    if (user.role !== "Admin mall") {
-      return Shop.findAll();
-    }
-
-    const subscriptionShops = SubscriptionShop
-      .find({"user_id": user.id})
-      .populate('shop_id');
-    return await subscriptionShops.shop_id;
+  async findAll() {
+    return await Shop.find();
   }
 
   async findById(id) {

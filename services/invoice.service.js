@@ -54,6 +54,41 @@ class InvoiceService {
   async delete(id) {
     return await Invoice.findByIdAndDelete(id);
   }
+
+  async getTotalOrdersByYear(year) {
+
+    const startDate = new Date(`${year}-01-01`);
+    const endDate = new Date(`${year}-12-31T23:59:59`);
+
+    const ordersData = await Invoice.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+          state: 5
+        }
+      },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          totalOrders: { $sum: 1 }
+        }
+      }
+    ]);
+
+    // Initialiser 12 mois à 0
+    const months = Array.from({ length: 12 }, (_, i) => ({
+      month: i + 1,
+      totalOrders: 0
+    }));
+
+    // Injecter les vraies valeurs
+    ordersData.forEach(item => {
+      const index = item._id - 1;
+      months[index].totalOrders = item.totalOrders;
+    });
+
+      return months;
+  }
 }
 
 module.exports = new InvoiceService();

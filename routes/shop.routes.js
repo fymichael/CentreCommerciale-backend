@@ -8,7 +8,7 @@ router.post('/', controller.createShop);
 router.get(
     '/', 
     authMiddleware,
-    authorize(["Admin mall", "Admin shop"]),
+    authorize(["Admin mall"]),
     controller.getShops
 );
 router.get('/:id', controller.getShopById);

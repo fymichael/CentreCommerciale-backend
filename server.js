@@ -91,6 +91,7 @@ app.use('/users', require('./routes/user.routes'));
 app.use('/auth', require('./routes/auth.routes'));
 app.use('/subscriptions', require('./routes/subscriptionShop.routes'));
 app.use('/storages', require('./routes/storage.routes'));
+app.use('/dashboard', require('./routes/dashboard.routes'));
 
 // 7. DÉMARRAGE LOCAL (ignoré sur Vercel)
 if (!process.env.VERCEL) {
